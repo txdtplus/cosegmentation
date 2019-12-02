@@ -27,9 +27,11 @@ imshow(uint8(img1(:,:,4:-1:2)));
 figure;
 imshow(uint8(img2(:,:,4:-1:2)));
 %%
-MBI1 = cal_MBI(img1);
-MBI2 = cal_MBI(img2);
+% MBI1 = cal_MBI(img1);
+% MBI2 = cal_MBI(img2);
+load MBI;
 MBI1 = MBI1/max(max(MBI1))*255;
+MBI2 = MBI2/max(max(MBI2))*255;
 
 img1 = cat(3,img1,MBI1);
 img2 = cat(3,img2,MBI2);
