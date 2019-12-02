@@ -1,12 +1,12 @@
-function MBI = cal_MBI(img)
-% calculate MBI of the input image
-
+clear; clc; close all;
+[img,map] = imread('data/C2009.tif','tif');
 img_double = double(img);
 
 b = max(img_double,[],3);              % b is brightness image
 smin = 10;  smax = 70;  ds = 5;
 S = (smax - smin)/ds + 1;
-D = 10;  n = D*S;
+D = 4;
+n = D*S;
 
 MP1 = b;
 DMP = cell(1,n);
@@ -22,13 +22,23 @@ for s = smin : ds : smax
         
         DMP{i} = abs(MP2 - MP1);       
         MP1 = MP2;
-        disp(['calculating MBI... the ',num2str(i),'th loop']);
+        disp(['the ',num2str(i),'th loop']);
         sum_DMP = sum_DMP + DMP{i};
         i = i + 1;
     end
 end
 MBI = sum_DMP / n;
-disp('MBI calculation finished!');
-disp(' ');
-end
 
+% figure;
+% imshow(b,map);
+% 
+% figure;
+% imshow(MBI,map);
+% 
+% 
+% for i = 1:4
+%     img_double(:,:,i) = img_double(:,:,i)/max(max(img_double(:,:,i)));
+% end
+% 
+% figure;
+% imshow(img_double(:,:,[3,2,1]),'DisplayRange',[])
