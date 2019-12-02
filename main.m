@@ -29,6 +29,7 @@ imshow(uint8(img2(:,:,4:-1:2)));
 %%
 MBI1 = cal_MBI(img1);
 MBI2 = cal_MBI(img2);
+MBI1 = MBI1/max(max(MBI1))*255;
 
 img1 = cat(3,img1,MBI1);
 img2 = cat(3,img2,MBI2);
@@ -42,3 +43,7 @@ for i = 1:m
     end
 end
 h_Ic = imhist16(floor(Ic));
+figure;
+imshow(MBI1,[]);
+figure;
+imshow(MBI2,[]);

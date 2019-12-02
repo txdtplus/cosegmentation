@@ -4,7 +4,7 @@ function MBI = cal_MBI(img)
 img_double = double(img);
 
 b = max(img_double,[],3);              % b is brightness image
-smin = 100;  smax = 800;  ds = 100;
+smin = 200;  smax = 500;  ds = 500;
 S = (smax - smin)/ds + 1;
 D = 10;  n = D*S;
 
