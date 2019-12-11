@@ -1,5 +1,6 @@
 clear; clc; close all;
 addpath('src');
+addpath('graphCutMex_BoykovKolmogorov');
 %% preprocessing
 [img1,map1] = imread('data/C2009.tif','tif');
 [img2,map2] = imread('data/C2012M.tif','tif');
