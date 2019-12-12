@@ -1,10 +1,12 @@
 clear; clc; close all;
 addpath('src');
-addpath('src/EM');
-addpath('src/GC');
+addpath('src\EM');
+addpath('src\GC');
+addpath('src\build_graph');
+
 %% preprocessing
-[img1,map1] = imread('data/C2009.tif','tif');
-[img2,map2] = imread('data/C2012M.tif','tif');
+[img1,map1] = imread('..\cosegmentation_data\C2009.tif','tif');
+[img2,map2] = imread('..\cosegmentation_data\C2012M.tif','tif');
 img1 = double(round(img1));
 img2 = double(round(img2));
 
@@ -20,12 +22,27 @@ img2 = rad_corr(img2);
 %% add MBI and calculate difference image 
 % MBI1 = cal_MBI(img1);
 % MBI2 = cal_MBI(img2);
-load MBI;
+load ..\cosegmentation_data\MBI;
 img1 = cat(3,img1,MBI1);
 img2 = cat(3,img2,MBI2);
 Ic = img_diff(img1,img2);
 
 %% calulate threshold using Bayes theory
-[T_theory,T_experiment] = cal_threshold(Ic);
-% T_theory = 191.6429;
-% T_experiment = 196.3987;
+% [T_theory,T_experiment] = cal_threshold(Ic);
+T_theory = 191.6429;
+T_experiment = 196.3987;
+T = T_experiment;
+
+%% build graph and calculate edge weights
+% lambda1 = 0.25;
+% lambda2 = 0.1;
+% [termWeights_1, edgeWeights_1] = cal_wight(img1,Ic,lambda1,T);
+% [termWeights_2, edgeWeights_2] = cal_wight(img2,Ic,lambda2,T);
+load ..\cosegmentation_data\graph_par;
+
+%% graph-cut algorithm for cosegmentation
+tic
+[cut_1, labels_1] = graphCutMex(termWeights_1, edgeWeights_1);
+[cut_2, labels_2] = graphCutMex(termWeights_2, edgeWeights_2);
+toc
+
