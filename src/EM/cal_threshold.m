@@ -76,7 +76,7 @@ for it = 1:iter_num
             gamma(j,i) = a(i)*gauss_p(x(j),mu_cell{i},var_cell{i})/p;
         end
         if mod(j,10000) == 0
-            disp(['',num2str(j),'th calculation finished!']);
+            disp(['EM algorithm: ',num2str(j),'th calculation finished!']);
         end
     end
     

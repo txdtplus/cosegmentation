@@ -1,6 +1,7 @@
 clear; clc; close all;
 addpath('src');
-addpath('graphCutMex_BoykovKolmogorov');
+addpath('src/EM');
+addpath('src/GC');
 %% preprocessing
 [img1,map1] = imread('data/C2009.tif','tif');
 [img2,map2] = imread('data/C2012M.tif','tif');
@@ -25,6 +26,6 @@ img2 = cat(3,img2,MBI2);
 Ic = img_diff(img1,img2);
 
 %% calulate threshold using Bayes theory
-% [T_theory,T_experiment] = cal_threshold(Ic);
-T_theory = 191.6429;
-T_experiment = 196.3987;
+[T_theory,T_experiment] = cal_threshold(Ic);
+% T_theory = 191.6429;
+% T_experiment = 196.3987;
