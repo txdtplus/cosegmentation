@@ -9,6 +9,7 @@ addpath('src\build_graph');
 [img2,map2] = imread('..\cosegmentation_data\C2012M.tif','tif');
 img1 = double(round(img1));
 img2 = double(round(img2));
+[M,N,H] = size(img1);
 
 %% radiation correction
 img1 = rad_corr(img1);
@@ -46,3 +47,13 @@ tic
 [cut_2, labels_2] = graphCutMex(termWeights_2, edgeWeights_2);
 toc
 
+seg1 = reshape(labels_1, [M N]);
+seg2= reshape(labels_2, [M N]);
+se1=strel('square',5);
+se2=strel('square',3);
+figure(8);
+seg1=imclose(seg1,se2);
+seg1=imopen(seg1,se1);
+seg1 = imfill(seg1,'holes');
+imshow(seg1);
+title('T1');
