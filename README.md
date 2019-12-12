@@ -7,5 +7,5 @@ Xiao, P., Yuan, M., Zhang, X., Feng, X. and Guo, Y.,
 from high-resolution remotely sensed images. 
 IEEE Transactions on Geoscience and Remote Sensing, 55(3), pp.1587-1603.
 
-This program https://github.com/aosokin/graphCutMex_BoykovKolmogorov
+https://github.com/aosokin/graphCutMex_BoykovKolmogorov
 has been used for Graph-cut algorithm
