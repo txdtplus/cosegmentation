@@ -40,18 +40,14 @@ load ..\cosegmentation_data\graph_par;
 [cut_1, labels_1] = graphCutMex(termWeights_1, edgeWeights_1);
 [cut_2, labels_2] = graphCutMex(termWeights_2, edgeWeights_2);
 
-seg1 = reshape(labels_1, [M N]);
-seg2 = reshape(labels_2, [M N]);
-se1=strel('square',5);
-se2=strel('square',3);
-figure(8);
-seg1=imclose(seg1,se2);
-seg1=imopen(seg1,se1);
-seg1 = imfill(seg1,'holes');
-imshow(seg1);
-title('T1');
+%% fragmentation Removal
+reso = 1;     % image resolution
+seg1 = reshape(labels_1, [M,N]);
+seg2 = reshape(labels_2, [M,N]);
 
-% figure;
-% imshow(uint8(img1(:,:,4:-1:2)));
-% figure;
-% imshow(uint8(img2(:,:,4:-1:2)));
+seg1 = frag_remove(seg1,reso);
+seg2 = frag_remove(seg2,reso);
+
+%% recognize objects
+% [L1,num1]= bwlabel(seg1,8);
+% [L2,num2]= bwlabel(seg2,8);

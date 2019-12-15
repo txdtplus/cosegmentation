@@ -14,7 +14,7 @@ x = reshape(Ic,[1,M*N]);        % generate 1D data
 m = length(x);
 
 %% estimate mean and variance of 2 classes using EM 
-[mu_cell,var_cell,gamma] = cal_EM(x,Tn,Tc);
+[mu,sigma2,gamma] = cal_EM(x,Tn,Tc);
 
 %% determine prior probability of changed and unchanged area
 [~,index] = max(gamma,[],2);
@@ -23,16 +23,16 @@ pwc = sum(index)/m;
 pwn = 1 - pwc;
 
 %% solve the threshold theoretically
-sigma_n_2 = var_cell{1};
+sigma_n_2 = sigma2(:,:,1);
 sigma_n = sqrt(sigma_n_2);
-sigma_c_2 = var_cell{2};
+sigma_c_2 = sigma2(:,:,2);
 sigma_c = sqrt(sigma_c_2);
-mu_n = mu_cell{1};
-mu_cell = mu_cell{2};
+mu_n = mu(:,1);
+mu_c = mu(:,2);
 
 a = sigma_n_2 - sigma_c_2;
-b = 2*(mu_n*sigma_c_2 - mu_cell*sigma_n_2);
-c = mu_cell^2*sigma_n_2 - mu_n^2*sigma_c_2 - ...
+b = 2*(mu_n*sigma_c_2 - mu_c*sigma_n_2);
+c = mu_c^2*sigma_n_2 - mu_n^2*sigma_c_2 - ...
     2*sigma_n_2*sigma_c_2*log(sigma_n*pwc/(sigma_c*pwn));
 
 T_theory = (-b-sqrt(b^2 - 4*a*c))/(2*a);
@@ -50,30 +50,33 @@ end
 
 
 %% EM algorithm
-function [mu_cell,var_cell,gamma] = cal_EM(x,Tn,Tc)
+function [mu,sigma2,gamma] = cal_EM(x,Tn,Tc)
+% EM algorithm
+% x should be d*m, d is dimension and m is number of sample capacity
+% Tn and Tc are 2 thresholds.
 
 Sn = x(x<Tn);
 Sc = x(x>Tc);
-
+[d,m] = size(x);
 k = 2;
-mu_cell = cell(1,k);
-var_cell = cell(1,k);
-mu_cell{1} = mean(Sn);
-mu_cell{2} = mean(Sc);
-var_cell{1} = var(Sn);
-var_cell{2} = var(Sc);
+
+mu = zeros(d,k);
+sigma2 = zeros(d,d,k);
+mu(:,1) = mean(Sn,2);
+mu(:,2) = mean(Sc,2);
+sigma2(:,:,1) = var(Sn);
+sigma2(:,:,2) = var(Sc);
 
 a = 1/k*ones(k,1);
 
-m = length(x);
 gamma = zeros(m,k);
 iter_num = 20;
 
 for it = 1:iter_num
     parfor j = 1:m
-        p = px(a,x(j),mu_cell,var_cell);
+        p = px(a,x(j),mu,sigma2);
         for i = 1:k
-            gamma(j,i) = a(i)*gauss_p(x(j),mu_cell{i},var_cell{i})/p;
+            gamma(j,i) = a(i)*gauss_p(x(j),mu(:,i),sigma2(:,:,i))/p;
         end
         if mod(j,10000) == 0
             disp(['EM algorithm: ',num2str(j),'th calculation finished!']);
@@ -82,10 +85,10 @@ for it = 1:iter_num
     
     for i = 1:k
         sum_gamma = sum(gamma(:,i));
-        mu_cell{i} = x*gamma(:,i)/sum_gamma;
+        mu(:,i) = x*gamma(:,i)/sum_gamma;
         
-        x_squ = (x - mu_cell{i}).*(x - mu_cell{i});
-        var_cell{i} = x_squ*gamma(:,i)/sum_gamma;
+        x_squ = (x - mu(:,i)).*(x - mu(:,i));
+        sigma2(:,:,i) = x_squ*gamma(:,i)/sum_gamma;
         a(i) = sum_gamma/m;
     end
 end
