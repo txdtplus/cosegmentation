@@ -1,7 +1,6 @@
 function bw_out = frag_remove(bw,reso)
 % fragmentation removal
 
-%% fragmentation remove
 se_close = strel('square',5);
 se_open = strel('square',5);
 bw = imclose(bw,se_open);
@@ -9,7 +8,7 @@ bw = imopen(bw,se_close);
 
 max_area = 100/(reso^2);
 
-[L, ~] = bwlabel(bw);
+[L, ~] = bwlabel(bw,8);
 states = regionprops(L,'Area','PixelList','MajorAxisLength','MinorAxisLength');
 for i = 1:size(states)
     
@@ -29,8 +28,7 @@ for i = 1:size(states)
     end
 end
 
-bw_frag_free = bw;
-%% Correspondence Establishment
+bw_out = bw;
 
 end
 

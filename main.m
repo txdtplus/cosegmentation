@@ -48,11 +48,5 @@ seg2 = reshape(labels_2, [M,N]);
 seg1 = frag_remove(seg1,reso);
 seg2 = frag_remove(seg2,reso);
 
-%% recognize objects
+%% Correspondence Establishment
 [L1,num1]= bwlabel(seg1,8);
-[L2,num2]= bwlabel(seg2,8);
-
-figure;
-imshow(seg1);
-figure;
-imshow(seg2);
