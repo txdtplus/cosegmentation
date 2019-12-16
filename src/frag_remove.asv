@@ -1,0 +1,24 @@
+function bw_out = frag_remove(bw,reso)
+% fragmentation removal
+
+se_close = strel('square',3);
+se_open = strel('square',3);
+
+bw = imclose(bw,se_open);
+bw = imopen(bw,se_close);
+
+max_area = 100/(reso^2);
+
+% eliminate small patches less than 100 m2
+[L, ~] = bwlabel(bw);
+states = regionprops(L,'Area','PixelList','MajorAxisLength','MinorAxisLength'); 
+for i = 1:size(states)
+    if states(i).Area < max_area
+        for j = 1:STATS1(i).Area
+            bw(states(i).PixelList(j,2),states(i).PixelList(j,1)) = 0;
+        end
+    end
+end
+bw_out = bw;
+end
+
