@@ -1,0 +1,33 @@
+clear; clc; close all
+load segoa
+
+union_segoa = seg1_oa | seg2_oa;
+[M,N] = size(union_segoa);
+
+[L,num] = bwlabel(union_segoa);
+color = randi(255,[3,num+1]);
+color(:,1) = 0;
+
+seg1_label = L .* seg1_oa + 1;
+seg2_label = L .* seg2_oa + 1;
+
+seg1_show = zeros(M,N,3);
+seg2_show = zeros(M,N,3);
+for i = 1:M
+    for j = 1:N
+        seg1_show(:,:,i) = reshape(color(:,seg2_label(i,j)),[1,1,3]);
+        seg2_show(:,:,i) = reshape(color(:,seg2_label(i,j)),[1,1,3]);
+    end   
+end
+
+imshow(uin)
+
+
+
+% figure
+% image(seg1_label)
+% colormap(jet)
+% 
+% figure
+% image(seg2_label)
+% colormap(jet)

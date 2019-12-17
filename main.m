@@ -15,6 +15,10 @@ img2 = double(round(img2));
 img1 = rad_corr(img1);
 img2 = rad_corr(img2);
 
+figure;
+imshow(uint8(img1(:,:,4:-1:2)));
+figure;
+imshow(uint8(img2(:,:,4:-1:2)));
 %% add MBI and calculate difference image 
 load ..\cosegmentation_data\MBI;
 % MBI1 = cal_MBI(img1);
@@ -30,7 +34,7 @@ T_experiment = 196.3987;
 T = T_experiment;
 
 %% build graph and calculate edge weights
-lambda1 = 0.25;
+lambda1 = 0.7;
 lambda2 = 0.1;
 load ..\cosegmentation_data\graph_par;
 % [termWeights_1, edgeWeights_1] = cal_wight(img1,Ic,lambda1,T);
@@ -45,8 +49,20 @@ reso = 1;     % image resolution
 seg1 = reshape(labels_1, [M,N]);
 seg2 = reshape(labels_2, [M,N]);
 
+figure;
+imshow(seg1);
+
 seg1 = frag_remove(seg1,reso);
 seg2 = frag_remove(seg2,reso);
 
 %% Correspondence Establishment
-[L1,num1]= bwlabel(seg1,8);
+[seg1_oa,seg2_oa] = overlay_analysis(seg1,seg2);
+[seg1_show,seg2_show] = assign_label(seg1_oa,seg2_oa);
+
+%% result
+figure;
+imshow(seg1_show);
+figure;
+imshow(seg2_show);
+
+
