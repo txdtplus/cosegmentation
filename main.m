@@ -9,6 +9,7 @@ addpath('src\build_graph');
 [img2,map2] = imread('..\cosegmentation_data\C2012M.tif','tif');
 img1 = double(round(img1));
 img2 = double(round(img2));
+
 [M,N,H] = size(img1);
 
 %% radiation correction
@@ -34,11 +35,12 @@ T_experiment = 196.3987;
 T = T_experiment;
 
 %% build graph and calculate edge weights
-lambda1 = 0.7;
+lambda1 = 0.25;
 lambda2 = 0.1;
-load ..\cosegmentation_data\graph_par;
-% [termWeights_1, edgeWeights_1] = cal_wight(img1,Ic,lambda1,T);
-% [termWeights_2, edgeWeights_2] = cal_wight(img2,Ic,lambda2,T);
+% load ..\cosegmentation_data\graph_par;
+% save img img1
+[termWeights_1, edgeWeights_1] = cal_weight(img1,Ic,lambda1,T);
+[termWeights_2, edgeWeights_2] = cal_weight(img2,Ic,lambda2,T);
 
 %% graph-cut algorithm for cosegmentation
 [cut_1, labels_1] = graphCutMex(termWeights_1, edgeWeights_1);
