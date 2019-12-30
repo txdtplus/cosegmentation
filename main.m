@@ -31,14 +31,10 @@ img2 = cat(3,img2,MBI2);
 Ic = img_diff(img1,img2);
 
 %% calulate threshold using Bayes theory
-% T_theory = 191.6429;
-% T_experiment = 196.3987;
 [T_theory,T_experiment,gamma] = cal_threshold(Ic);
 T = T_experiment;
 
 %% build graph and calculate edge weights
-% load ..\cosegmentation_data\graph_par;
-% save img img1
 [termWeights_1, edgeWeights_1] = cal_weight(img1,Ic,lambda1,T);
 [termWeights_2, edgeWeights_2] = cal_weight(img2,Ic,lambda2,T);
 
