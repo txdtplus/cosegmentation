@@ -2,7 +2,6 @@ clear; clc; close all;
 addpath('src');
 addpath('src\EM');
 addpath('src\GC');
-addpath('src\build_graph');
 
 %% preprocessing
 [img1,map1] = imread('..\cosegmentation_data\C2009.tif','tif');
@@ -29,9 +28,9 @@ img2 = cat(3,img2,MBI2);
 Ic = img_diff(img1,img2);
 
 %% calulate threshold using Bayes theory
-T_theory = 191.6429;
-T_experiment = 196.3987;
-% [T_theory,T_experiment] = cal_threshold(Ic);
+% T_theory = 191.6429;
+% T_experiment = 196.3987;
+[T_theory,T_experiment,gamma] = cal_threshold(Ic);
 T = T_experiment;
 
 %% build graph and calculate edge weights

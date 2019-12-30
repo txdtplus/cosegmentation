@@ -1,4 +1,4 @@
-function [T_theory,T_experiment,gamma]= cal_threshold(Ic)
+function [T_theory,T_experiment]= cal_threshold(Ic)
 % calculate threshold using EM algorthms
 % Ic is difference image
 [M,N] =size(Ic);
@@ -14,11 +14,10 @@ x = reshape(Ic,[1,M*N]);        % generate 1D data
 m = length(x);
 
 %% estimate mean and variance of 2 classes using EM 
-[mu_ini,sigma_ini] = ini_par(x,Tn,Tc);
-[mu,sigma2,gamma] = cal_EM(x,mu_ini,sigma_ini);
+[mu,sigma2,gamma] = cal_EM(x,Tn,Tc);
 
 %% determine prior probability of changed and unchanged area
-[~,index] = max(gamma);
+[~,index] = max(gamma,[],2);
 index = index - 1;
 pwc = sum(index)/m;
 pwn = 1 - pwc;
@@ -39,6 +38,7 @@ c = mu_c^2*sigma_n_2 - mu_n^2*sigma_c_2 - ...
 T_theory = (-b-sqrt(b^2 - 4*a*c))/(2*a);
 
 %% solve the threshold experimentally
+index = index';
 yc = x.*index;
 yn = x.*(1 - index);
 yc(yc == 0) = [];
@@ -50,21 +50,22 @@ end
 
 
 %% EM algorithm
-function [mu,sigma] = ini_par(x,Tn,Tc)
+function [mu,cov] = ini_par(x,Tn,Tc)
 
 k = 2;
 x_cell = cell(1,k);
-x_cell{1} = x(x<Tn);    % Sn
-x_cell{2} = x(x>Tc);    % Sc
-d = 1;
+Sn = x(x<Tn);
+Sc = x(x>Tc);
+[d,m] = size(x);
+
 
 mu = zeros(d,k);
-sigma = zeros(d,d,k);
+cov = zeros(d,d,k);
 
-for i = 1:k
-    mu(:,i) = mean(x_cell{i},2);
-    sigma(:,:,i) = var(x_cell{i});
-end
+mu(:,1) = mean(Sn,2);
+mu(:,2) = mean(Sc,2);
+cov(:,:,1) = var(Sn);
+cov(:,:,2) = var(Sc);
 end
 % function [mu,sigma2,gamma] = cal_EM(x,Tn,Tc)
 % % EM algorithm
