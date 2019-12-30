@@ -3,12 +3,9 @@ addpath('src');
 addpath('src\EM');
 addpath('src\GC');
 
-lambda1 = 0.25;
-lambda2 = 0.1;
-reso = 2;     % image resolution
 %% preprocessing
-[img1,map1] = imread('..\cosegmentation_data\C2013_matched.tif','tif');
-[img2,map2] = imread('..\cosegmentation_data\C2016.tif','tif');
+[img1,map1] = imread('..\cosegmentation_data\C2016.tif','tif');
+[img2,map2] = imread('..\cosegmentation_data\C201.tif','tif');
 img1 = double(round(img1));
 img2 = double(round(img2));
 
@@ -23,9 +20,9 @@ imshow(uint8(img1(:,:,4:-1:2)));
 figure;
 imshow(uint8(img2(:,:,4:-1:2)));
 %% add MBI and calculate difference image 
-% load ..\cosegmentation_data\MBI;
-MBI1 = cal_MBI(img1);
-MBI2 = cal_MBI(img2);
+load ..\cosegmentation_data\MBI;
+% MBI1 = cal_MBI(img1);
+% MBI2 = cal_MBI(img2);
 img1 = cat(3,img1,MBI1);
 img2 = cat(3,img2,MBI2);
 Ic = img_diff(img1,img2);
@@ -37,6 +34,8 @@ Ic = img_diff(img1,img2);
 T = T_experiment;
 
 %% build graph and calculate edge weights
+lambda1 = 0.35;
+lambda2 = 0.2;
 % load ..\cosegmentation_data\graph_par;
 % save img img1
 [termWeights_1, edgeWeights_1] = cal_weight(img1,Ic,lambda1,T);
@@ -47,6 +46,7 @@ T = T_experiment;
 [cut_2, labels_2] = graphCutMex(termWeights_2, edgeWeights_2);
 
 %% fragmentation Removal
+reso = 1;     % image resolution
 seg1 = reshape(labels_1, [M,N]);
 seg2 = reshape(labels_2, [M,N]);
 

@@ -1,8 +1,8 @@
 function bw_out = frag_remove(bw,reso)
 % fragmentation removal
 
-se_close = strel('square',3);
-se_open = strel('square',3);
+se_close = strel('square',7);
+se_open = strel('square',7);
 bw = imclose(bw,se_open);
 bw = imopen(bw,se_close);
 
