@@ -3,6 +3,7 @@ function h = imhist16(img)
 % img should be a gray image
 % pixel value should be integer
 
+img = ceil(img);
 [m,n] = size(img);
 max_v = max(max(img));
 l = max_v + 1;

@@ -1,14 +1,14 @@
 function bw_out = frag_remove(bw,reso)
 % fragmentation removal
 
-se_close = strel('square',7);
-se_open = strel('square',7);
-bw = imclose(bw,se_open);
-bw = imopen(bw,se_close);
+% se_close = strel('square',3);
+% se_open = strel('square',3);
+% bw = imclose(bw,se_open);
+% bw = imopen(bw,se_close);
 
-max_area = 100/(reso^2);
+max_area = 200/(reso^2);
 
-[L, ~] = bwlabel(bw,8);
+[L, ~] = bwlabel(bw,4);
 states = regionprops(L,'Area','PixelList','MajorAxisLength','MinorAxisLength');
 for i = 1:size(states)
     
