@@ -7,8 +7,8 @@ lambda1 = 0.9;
 lambda2 = 0.9;
 reso = 1;     % image resolution
 %% preprocessing
-[img1,map1] = imread('D:\data\GAMMA_fil\fil1.bmp','bmp');
-[img2,map2] = imread('D:\data\GAMMA_fil\fil4.bmp','bmp');
+[img1,map1] = imread('E:\data\GAMMA_fil\fil1.bmp','bmp');
+[img2,map2] = imread('E:\data\GAMMA_fil\fil4.bmp','bmp');
 img1 = double(round(img1));
 img2 = double(round(img2));
 
@@ -24,10 +24,10 @@ img2 = double(round(img2));
 % imshow(uint8(img2));
 %% add MBI and calculate difference image 
 % load ..\cosegmentation_data\MBI;
-% MBI1 = cal_MBI(img1);
-% MBI2 = cal_MBI(img2);
-% img1 = cat(3,img1,MBI1);
-% img2 = cat(3,img2,MBI2);
+MBI1 = cal_MBI(img1);
+MBI2 = cal_MBI(img2);
+img1 = cat(3,img1,MBI1);
+img2 = cat(3,img2,MBI2);
 Ic = img_diff(img1,img2);
 figure;
 imshow(Ic,[]);
