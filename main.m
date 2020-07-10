@@ -36,9 +36,8 @@ figure;
 stem(Ic_hist)
 
 %% calulate threshold using Bayes theory
-% [T_theory,T_experiment,gamma] = cal_threshold(Ic);
-T = 41;
-% T = graythresh(Ic) * max(max(Ic));
+[T_theory,T_experiment,gamma] = cal_threshold(Ic);
+T = T_theory;
 
 %% build graph and calculate edge weights
 [termWeights_1, edgeWeights_1] = cal_weight(img1,Ic,lambda1,T);
